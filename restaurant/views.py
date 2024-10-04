@@ -1,38 +1,70 @@
-# from django.http import HttpResponse
-from django.shortcuts import render
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .models import Menu, Booking
+from drf_spectacular.utils import extend_schema_view, extend_schema
+from .serializers import MenuSerializer, BookingSerializer
 from .forms import BookingForm
-from .models import Menu
+from django.shortcuts import render, get_object_or_404
 
-
-# Create your views here.
+# Function-based views for template rendering (HTML views)
 def home(request):
     return render(request, 'index.html')
 
 def about(request):
     return render(request, 'about.html')
 
-def book(request):
-    form = BookingForm()
-    if request.method == 'POST':
-        form = BookingForm(request.POST)
-        if form.is_valid():
-            form.save()
-    context = {'form':form}
-    return render(request, 'book.html', context)
+# API views for Swagger documentation
 
-# Add your code here to create new views
+# Class-based view for booking form submission with extended schema
+@extend_schema_view(
+    get=extend_schema(
+        description="Get the booking data",
+        responses={200: BookingSerializer(many=True)}
+    ),
+    post=extend_schema(
+        description="Submit the booking form",
+        request=BookingSerializer,
+        responses={201: BookingSerializer}
+    )
+)
+class BookingAPIView(generics.GenericAPIView):
+    serializer_class = BookingSerializer
 
-#Menu Function
-def menu(request):
-    menu_data = Menu.objects.all()
-    menu_data = menu_data.order_by('price')
-    main_data = {"menu": menu_data}
-    return render(request, 'menu.html', {"menu": main_data})
+    def get(self, request, *args, **kwargs):
+        # Fetch all booking objects from the database
+        bookings = Booking.objects.all()
+        # Serialize the booking data
+        serializer = self.get_serializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def display_menu_item(request, pk=None): 
-    if pk: 
-        menu_item = Menu.objects.get(pk=pk) 
-    else: 
-        menu_item = "" 
-    return render(request, 'menu_item.html', {"menu_item": menu_item}) 
+# Class-based view to list menu items with extended schema
+@extend_schema_view(
+    get=extend_schema(
+        description="Get the list of menu items",
+        responses={200: MenuSerializer(many=True)}
+    )
+)
+class MenuListAPIView(generics.ListAPIView):
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+
+
+# Class-based view to retrieve a specific menu item
+@extend_schema_view(
+    get=extend_schema(
+        description="Get a specific menu item by ID",
+        responses={200: MenuSerializer, 404: "Menu item not found"}
+    )
+)
+class MenuItemDetailAPIView(generics.RetrieveAPIView):
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+    lookup_field = 'pk'
