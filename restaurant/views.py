@@ -3,15 +3,6 @@ from rest_framework.response import Response
 from .models import Menu, Booking
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from .serializers import MenuSerializer, BookingSerializer
-from .forms import BookingForm
-from django.shortcuts import render, get_object_or_404
-
-# Function-based views for template rendering (HTML views)
-def home(request):
-    return render(request, 'index.html')
-
-def about(request):
-    return render(request, 'about.html')
 
 # API views for Swagger documentation
 
