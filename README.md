@@ -18,17 +18,17 @@ For the menu page, the owners would like to store the menu information in a data
 <hr>
 
 - About page
-![Screenshot from 2023-11-18 20-13-41](https://github.com/Kiruba2602/django-little-lemon/assets/asset2.png)
+![Screenshot from 2023-11-18 20-13-41](assets/asset2.png)
 
 <hr>
 
 - Menu page
-![Screenshot from 2023-11-18 20-13-56](https://github.com/Kiruba2602/django-little-lemon/assets/asset3.png)
+![Screenshot from 2023-11-18 20-13-56](assets/asset3.png)
 
 <hr>
 
 - Book page
-![Screenshot from 2023-11-18 20-14-06](https://github.com/Kiruba2602/django-little-lemon/assets/asset4.png)
+![Screenshot from 2023-11-18 20-14-06](assets/asset4.png)
 
 <hr>
 
