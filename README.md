@@ -12,7 +12,7 @@ For the menu page, the owners would like to store the menu information in a data
 
 - Home page:
 
-![Home page](https://github.com/Kiruba2602/django-little-lemon/assets/asset1.png)
+![Home page](assets/asset1.png)
 
 
 <hr>
